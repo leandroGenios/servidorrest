@@ -1,9 +1,14 @@
 package br.com.servidorrest.model;
 
+import javax.validation.constraints.NotNull;
+
 public class Cliente {
 	private int id;
+	@NotNull(message = "O preenchimento do CPF é Obrigatório")
 	private String cpf;
+	@NotNull(message = "O preenchimento do nome é Obrigatório")
 	private String nome;
+	@NotNull(message = "O preenchimento do sobrenome é Obrigatório")
 	private String sobrenome;
 	
 	public Cliente(int id, String cpf, String nome, String sobrenome) {

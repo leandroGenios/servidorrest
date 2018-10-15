@@ -3,16 +3,17 @@ package br.com.servidorrest.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.jdbc.Statement;
 
 import br.com.servidorrest.model.Cliente;
 import br.com.servidorrest.util.GerenciadorJDBC;
 
 public class ClienteDAO {
 
-	public List<Cliente> listClientes(){
+	public List<Cliente> listClientes() throws Exception{
 		List<Cliente> lista = new ArrayList<Cliente>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -33,12 +34,34 @@ public class ClienteDAO {
 											  rs.getString("sobrenome"));
 				lista.add(cliente);
 			}
-
-		} catch (SQLException ex) {
-			 ex.printStackTrace();
 		} finally {
 			GerenciadorJDBC.close(conn, stmt, rs);
 		}
 		return lista;
+	}
+	
+	public Cliente setCliente(Cliente cliente) throws Exception{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			conn = GerenciadorJDBC.getConnection();
+			
+			String sql = "INSERT INTO cliente VALUES (NULL, ?, ?, ?)";
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			stmt.setString(1, cliente.getCpf());
+			stmt.setString(2, cliente.getNome());
+			stmt.setString(3, cliente.getSobrenome());
+			
+			stmt.executeUpdate();
+			
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			cliente.setId(rs.getInt(1));
+		}finally {
+			GerenciadorJDBC.close(conn, stmt);
+		}
+		return cliente;
 	}
 }
