@@ -1,23 +1,95 @@
 package br.com.servidorrest.resource;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import br.com.servidorrest.dao.ClienteDAO;
+import br.com.servidorrest.facade.ClienteFacade;
 import br.com.servidorrest.model.Cliente;
 
-@Path("/cliente")
+@Path("/clientes")
 public class ClienteResource {
-	private ClienteDAO dao = new ClienteDAO();
+	ClienteFacade facade = new ClienteFacade();
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/list")
-	public List<Cliente> listClientes(){
-		return dao.listClientes();
+	@Path("")
+	public Response listClientes(){
+		List<Cliente> clientes;
+		try {
+			clientes = facade.listClientes();
+
+			@SuppressWarnings("unused")
+			GenericEntity<List<Cliente>> lista = new GenericEntity<List<Cliente>>(clientes) {};
+			
+			return Response
+					.status(Response.Status.OK)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(clientes)
+					.build();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			return Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(e.getErrorCode() + "-" + e.getMessage())
+					.build();
+		}
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{id}")
+	public Response getCliente(@PathParam("id") int id){
+		Cliente cliente;
+		try {
+			cliente = facade.getCliente(id);
+
+			return Response
+					.status(Response.Status.OK)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(cliente)
+					.build();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			return Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(e.getErrorCode() + "-" + e.getMessage())
+					.build();
+		}
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("")
+	public Response setCliente(Cliente cliente){
+		try {
+			cliente = facade.setCliente(cliente);
+
+			return Response
+					.status(Response.Status.OK)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(cliente)
+					.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			return Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.header("Access-Control-Allow-Origin", "*")
+					.entity(e.getMessage())
+					.build();
+		}
 	}
 }
