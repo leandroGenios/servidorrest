@@ -6,7 +6,7 @@ import java.util.List;
 import br.com.servidorrest.dao.ClienteDAO;
 import br.com.servidorrest.model.Cliente;
 
-public class ClienteFacade {
+public class ClienteFacade { 
 	private ClienteDAO dao = new ClienteDAO();
 
 	public List<Cliente> listClientes() throws SQLException {
