@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import br.com.servidorrest.facade.ClienteFacade;
 import br.com.servidorrest.model.Cliente;
+import br.com.servidorrest.util.Result;
 
 @Path("/clientes")
 public class ClienteResource {
