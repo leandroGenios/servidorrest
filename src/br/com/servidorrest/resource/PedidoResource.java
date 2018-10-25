@@ -18,27 +18,29 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import br.com.servidorrest.facade.ClienteFacade;
+import br.com.servidorrest.facade.ProdutoFacade;
 import br.com.servidorrest.model.Cliente;
+import br.com.servidorrest.model.Produto;
 
-@Path("/clientes")
-public class ClienteResource {
-	ClienteFacade facade = new ClienteFacade();
+@Path("/produtos")
+public class PedidoResource {
+	ProdutoFacade facade = new ProdutoFacade();
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("")
-	public Response listClientes(){
-		List<Cliente> clientes;
+	public Response listProdutos(){
+		List<Produto> produtos;
 		try {
-			clientes = facade.listClientes();
+			produtos = facade.listProdutos();
 
 			@SuppressWarnings("unused")
-			GenericEntity<List<Cliente>> lista = new GenericEntity<List<Cliente>>(clientes) {};
+			GenericEntity<List<Produto>> lista = new GenericEntity<List<Produto>>(produtos) {};
 			
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(clientes)
+					.entity(produtos)
 					.build();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,15 +56,15 @@ public class ClienteResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response getCliente(@PathParam("id") int id){
-		Cliente cliente;
+	public Response getProduto(@PathParam("id") int id){
+		Produto produto;
 		try {
-			cliente = facade.getCliente(id);
+			produto = facade.getProduto(id);
 
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(cliente)
+					.entity(produto)
 					.build();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -78,14 +80,14 @@ public class ClienteResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("")
-	public Response setCliente(Cliente cliente){
+	public Response setProduto(Produto produto){
 		try {
-			cliente = facade.setCliente(cliente);
+			produto = facade.setProduto(produto);
 
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(cliente)
+					.entity(produto)
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,14 +103,14 @@ public class ClienteResource {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("")
-	public Response updateCliente(Cliente cliente){
+	public Response updateProduto(Produto produto){
 		try {
-			cliente = facade.updateCliente(cliente);
+			produto = facade.updateProduto(produto);
 
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(cliente)
+					.entity(produto)
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -124,9 +126,9 @@ public class ClienteResource {
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	public Response deleteCliente(@PathParam("id") int codigo){
+	public Response deleteProduto(@PathParam("id") int codigo){
 		try {
-			facade.deleteCliente(codigo);
+			facade.deleteProduto(codigo);
 			
 			return Response
 					.status(Response.Status.OK)

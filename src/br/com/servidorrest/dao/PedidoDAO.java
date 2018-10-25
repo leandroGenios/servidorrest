@@ -12,7 +12,7 @@ import com.mysql.jdbc.Statement;
 import br.com.servidorrest.model.Cliente;
 import br.com.servidorrest.util.GerenciadorJDBC;
 
-public class ClienteDAO {
+public class PedidoDAO {
 
 	public List<Cliente> listClientes() throws SQLException{
 		List<Cliente> lista = new ArrayList<Cliente>();

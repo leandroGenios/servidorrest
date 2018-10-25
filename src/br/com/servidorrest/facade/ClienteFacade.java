@@ -3,6 +3,8 @@ package br.com.servidorrest.facade;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+
 import br.com.servidorrest.dao.ClienteDAO;
 import br.com.servidorrest.model.Cliente;
 
@@ -20,51 +22,43 @@ public class ClienteFacade {
 	public Cliente setCliente(Cliente cliente) throws Exception {
 		if(validaCliente(cliente)) {
 			verificaCpf(cliente);
+			dao.setCliente(cliente);
 		}else {
-			throw new RuntimeException("Todos os campos devem ser preenchidos");
+			throw new WebApplicationException("Todos os campos devem ser preenchidos");
 		}
 		return cliente;
 	}
 
 	private boolean validaCliente(Cliente cliente) {
 		boolean status = true;
-		if(cliente.getCpf().equals("")) {
+		if(cliente.getCpf() == null || cliente.getCpf().equals("")) {
 			status = false;
-		}else if(cliente.getNome().equals("")) {
+		}else if(cliente.getNome() == null || cliente.getNome().equals("")) {
 			status = false;
-		}else if(cliente.getSobrenome().equals("")) {
+		}else if(cliente.getSobrenome() == null || cliente.getSobrenome().equals("")) {
 			status = false;
 		}
 		
 		return status;
 	}
 
-	/*public Retorno editaCliente(Cliente cliente) {
-		Retorno retorno = new Retorno();
-		
+	public Cliente updateCliente(Cliente cliente) throws Exception {
 		if(validaCliente(cliente)) {
-			Retorno c = verificaCpfEditar(cliente);
-			if(!c.getObjeto().equals("true")) {
-				retorno.setErro(c.getErro());				
-			}else {
-				Object r = dao.editarCliente(cliente);
-				if(r.getClass() == RuntimeException.class) {
-					retorno.setErro(new ErroMessenger("Ocorreu um erro ao editar o registro.", (RuntimeException)r));
-				}else {
-					retorno.setObjeto(r);
-				}
-			}
+			verificaCpf(cliente);
+			cliente = dao.updateCliente(cliente);
+		}else{
+			throw new WebApplicationException("Todos os campos devem ser preenchidos");
 		}
 		
-		return retorno;
-	}*/
+		return cliente;
+	}
 	
 	public boolean verificaCpf(Cliente cliente) throws SQLException {
 		
 		Cliente c = dao.getCliente(cliente.getCpf());
 		if(c != null) {
-			if(c.getId() == cliente.getId()) {
-				throw new RuntimeException("O CPF informado j· existe.");
+			if(c.getId() != cliente.getId()) {
+				throw new WebApplicationException("O CPF informado j√° existe.");
 			}else {
 				return true;
 			}
@@ -72,52 +66,7 @@ public class ClienteFacade {
 		return true;
 	}
 
-	/*public Retorno verificaCpfEditar(Cliente cliente) {
-		Retorno retorno = new Retorno();
-		retorno.setObjeto("");
-		Object r = dao.getCliente(cliente.getCpf());
-		if(r != null && r.getClass() == RuntimeException.class) {
-			retorno.setErro(new ErroMessenger("Ocorreu um erro ao editar o cliente.", (RuntimeException)r));
-		}else {
-			if(((Cliente)r).getId() == cliente.getId()){
-				retorno.setObjeto("true");				
-			}else {
-				retorno.setErro(new ErroMessenger("O CPF informado j· existe.", (RuntimeException)r));				
-			}
-		}
-		retorno.setObjeto("true");
-		return retorno;
+	public void deleteCliente(int codigo) throws SQLException {
+		dao.deleteCliente(codigo);
 	}
-
-	public Retorno excluirCliente(int codigo) {
-		Retorno retorno = new Retorno();
-		
-		Object r = dao.deleteCliente(codigo);
-		if(r != null) {
-			if(r.getClass() == RuntimeException.class) {
-				retorno.setErro(new ErroMessenger("Ocorreu um erro ao editar o cliente.", (RuntimeException)r));
-			}else {
-				retorno.setErro(new ErroMessenger("O cliente selecionado possui pedidos pendentes e n„o pode ser removido.", null));				
-			}
-		}else {
-			retorno.setObjeto("true");
-		}
-		return retorno;
-	}
-	
-	public Retorno getCliente(String cpf) {
-		Retorno retorno = new Retorno();
-		
-		Object r = dao.getCliente(cpf);
-		if(r != null) {
-			if(r.getClass() == RuntimeException.class) {
-				retorno.setErro(new ErroMessenger("Ocorreu um erro ao buscar o cliente", (RuntimeException)r));
-			}else {
-				retorno.setObjeto(r);
-			}
-		}else {
-			retorno.setErro(new ErroMessenger("Cliente n„o encontrado.", null));			
-		}
-		return retorno;
-	}*/
 }
