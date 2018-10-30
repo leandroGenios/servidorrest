@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 
 import br.com.servidorrest.dao.PedidoDAO;
+import br.com.servidorrest.model.ItemDoPedido;
 import br.com.servidorrest.model.Pedido;
 
 public class PedidoFacade { 
@@ -23,7 +24,7 @@ public class PedidoFacade {
 			return dao.getPedido(id);
 	}
 
-	public Pedido setpedido(Pedido pedido) throws Exception {
+	public Pedido setPedido(Pedido pedido) throws Exception {
 		if(validaPedido(pedido)) {
 			dao.setPedido(pedido);
 		}else {
@@ -34,12 +35,18 @@ public class PedidoFacade {
 
 	private boolean validaPedido(Pedido pedido) {
 		boolean status = true;
-		if(pedido.getCpf() == null || pedido.getCpf().equals("")) {
+		if(pedido.getCliente() == null) {
 			status = false;
-		}else if(pedido.getNome() == null || pedido.getNome().equals("")) {
+		}else if(pedido.getItens() == null || pedido.getItens().size() < 1) {
 			status = false;
-		}else if(pedido.getSobrenome() == null || pedido.getSobrenome().equals("")) {
-			status = false;
+		}else {
+			for (ItemDoPedido itens : pedido.getItens()) {
+				if(itens.getProduto() == null) {
+					status = false;
+				}else if(itens.getQuantidade() < 1) {
+					status = false;
+				}
+			}
 		}
 		
 		return status;
