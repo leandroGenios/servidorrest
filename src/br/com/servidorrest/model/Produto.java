@@ -4,6 +4,9 @@ public class Produto {
 	private int id;
 	private String descricao;
 	
+	public Produto(){
+		super();
+	}
 	public Produto(int id, String descricao) {
 		super();
 		this.id = id;
