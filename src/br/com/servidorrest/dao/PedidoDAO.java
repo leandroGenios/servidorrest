@@ -12,6 +12,7 @@ import com.mysql.jdbc.Statement;
 import br.com.servidorrest.model.Cliente;
 import br.com.servidorrest.model.ItemDoPedido;
 import br.com.servidorrest.model.Pedido;
+import br.com.servidorrest.model.Produto;
 import br.com.servidorrest.util.GerenciadorJDBC;
 
 public class PedidoDAO {
@@ -112,7 +113,7 @@ public class PedidoDAO {
 					+ "		,C.sobrenome"
 					+ " FROM PEDIDO P "
 					+ "INNER JOIN CLIENTE C "
-					+ "	  ON C.id = P.id"
+					+ "	  ON C.id = P.id_cliente "
 					+ "WHERE P.ID = ?";
 			stmt = conn.prepareStatement(sql);
 			
@@ -133,6 +134,35 @@ public class PedidoDAO {
 		} finally {
 			GerenciadorJDBC.close(conn, stmt, rs);
 		}
+		
+		try {
+			conn = GerenciadorJDBC.getConnection();
+
+			String sql = "SELECT P.descricao DESCRICAO, "
+							  + "I.qtdade QUANTIDADE "
+							  + "FROM item_do_pedido I "
+							  + "INNER JOIN produto P "
+							  + "ON P.id = I.id_produto "
+							  + "WHERE I.id_pedido = ?";
+			stmt = conn.prepareStatement(sql);
+			
+			stmt.setInt(1, codigo);
+
+			rs = stmt.executeQuery();
+
+			List<ItemDoPedido> listItens = new ArrayList<>();
+			while (rs.next()) {
+				Produto produto = new Produto();
+				produto.setDescricao(rs.getString("DESCRICAO"));
+				ItemDoPedido item = new ItemDoPedido(rs.getInt("QUANTIDADE"), produto);
+				listItens.add(item);
+			}
+			pedido.setItens(listItens);
+
+		} finally {
+			GerenciadorJDBC.close(conn, stmt, rs);
+		}
+		
 		return pedido;
 	}
 	
