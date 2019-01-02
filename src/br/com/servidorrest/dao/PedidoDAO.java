@@ -73,8 +73,8 @@ public class PedidoDAO {
 					+ "		,C.sobrenome"
 					+ " FROM PEDIDO P "
 					+ "INNER JOIN CLIENTE C "
-					+ "	  ON C.id = P.id"
-					+ "WHERE C.CPF = ?";
+					+ "	  ON C.id = P.id_cliente "
+					+ "WHERE C.CPF = '" + cpf + "'";
 			stmt = conn.prepareStatement(sql);
 			
 			rs = stmt.executeQuery();

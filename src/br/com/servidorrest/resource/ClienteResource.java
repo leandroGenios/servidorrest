@@ -84,13 +84,13 @@ public class ClienteResource {
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(cliente)
+					.entity(true)
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			return Response
-					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
 					.entity(new Gson().toJson(e.getMessage()))
 					.build();
@@ -107,13 +107,13 @@ public class ClienteResource {
 			return Response
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
-					.entity(cliente)
+					.entity(true)
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			return Response
-					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
 					.entity(new Gson().toJson(e.getMessage()))
 					.build();
@@ -133,9 +133,8 @@ public class ClienteResource {
 					.build();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			
 			return Response
-					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
 					.entity(e.getErrorCode() + "-" + e.getMessage())
 					.build();

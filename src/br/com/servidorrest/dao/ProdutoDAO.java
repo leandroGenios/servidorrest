@@ -102,7 +102,7 @@ public class ProdutoDAO {
 			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, produto.getDescricao());
-			stmt.setInt(4, produto.getId());
+			stmt.setInt(2, produto.getId());
 			
 			stmt.executeUpdate();
 		}

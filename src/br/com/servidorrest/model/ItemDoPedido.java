@@ -4,6 +4,10 @@ public class ItemDoPedido {
 	private int quantidade;
 	private Produto produto;
 	
+	public ItemDoPedido() {
+		
+	}
+	
 	public ItemDoPedido(int quantidade, Produto produto) {
 		this.quantidade = quantidade;
 		this.produto = produto;
